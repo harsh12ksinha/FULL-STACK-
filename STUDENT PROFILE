@@ -1,0 +1,37 @@
+import React from "react";
+
+// Student functional component
+function Student(props) {
+  return (
+    <div>
+      <h2>Student Profile</h2>
+      <p><strong>Name:</strong> {props.name}</p>
+      <p><strong>Course:</strong> {props.course}</p>
+      <p><strong>College:</strong> {props.college}</p>
+      <hr />
+    </div>
+  );
+}
+
+// App component
+function App() {
+  return (
+    <div>
+      <h1>Student Profiles</h1>
+
+      <Student
+        name="Rahul Sharma"
+        course="B.Tech Computer Science"
+        college="ABC College"
+      />
+
+      <Student
+        name="Priya Das"
+        course="BCA"
+        college="XYZ College"
+      />
+    </div>
+  );
+}
+
+export default App;
