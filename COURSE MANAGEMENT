@@ -1,0 +1,248 @@
+import React, { createContext, useContext } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useParams,
+} from "react-router-dom";
+
+import "./index.css";
+
+// ===============================
+// Context API
+// ===============================
+
+const StudentContext = createContext();
+
+const StudentProvider = ({ children }) => {
+  const student = {
+    name: "Rahul Kumar",
+    rollNo: "STU101",
+    department: "Computer Science",
+    year: "3rd Year",
+  };
+
+  return (
+    <StudentContext.Provider value={student}>
+      {children}
+    </StudentContext.Provider>
+  );
+};
+
+const useStudent = () => useContext(StudentContext);
+
+// ===============================
+// Navbar
+// ===============================
+
+const Navbar = () => {
+  const student = useStudent();
+
+  return (
+    <nav>
+      <h2>Student Course Management</h2>
+
+      <div>
+        <Link to="/">Home</Link>
+        <Link to="/courses">Courses</Link>
+        <Link to="/about">About</Link>
+      </div>
+
+      <span>Welcome, {student.name}</span>
+    </nav>
+  );
+};
+
+// ===============================
+// Home Page
+// ===============================
+
+const Home = () => {
+  const student = useStudent();
+
+  return (
+    <div className="page">
+      <h1>Student Course Management</h1>
+
+      <h2>Student Information</h2>
+
+      <p>
+        <b>Name:</b> {student.name}
+      </p>
+
+      <p>
+        <b>Roll Number:</b> {student.rollNo}
+      </p>
+
+      <p>
+        <b>Department:</b> {student.department}
+      </p>
+
+      <p>
+        <b>Year:</b> {student.year}
+      </p>
+
+      <Link to="/courses" className="button">
+        View Courses
+      </Link>
+    </div>
+  );
+};
+
+// ===============================
+// Courses Page
+// ===============================
+
+const Courses = () => {
+  const courses = [
+    {
+      id: 101,
+      name: "React Development",
+      duration: "3 Months",
+    },
+    {
+      id: 102,
+      name: "JavaScript Programming",
+      duration: "2 Months",
+    },
+    {
+      id: 103,
+      name: "Database Management",
+      duration: "3 Months",
+    },
+  ];
+
+  return (
+    <div className="page">
+      <h1>Available Courses</h1>
+
+      {courses.map((course) => (
+        <div className="course" key={course.id}>
+          <h2>{course.name}</h2>
+
+          <p>Course ID: {course.id}</p>
+
+          <p>Duration: {course.duration}</p>
+
+          <Link to={`/course/${course.id}`} className="button">
+            View Details
+          </Link>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// ===============================
+// Dynamic Course Details Page
+// ===============================
+
+const CourseDetails = () => {
+  const { id } = useParams();
+
+  const courses = {
+    101: {
+      name: "React Development",
+      description:
+        "Learn React components, props, state, hooks, React Router and Context API.",
+    },
+
+    102: {
+      name: "JavaScript Programming",
+      description:
+        "Learn JavaScript variables, functions, arrays, objects, ES6 and asynchronous programming.",
+    },
+
+    103: {
+      name: "Database Management",
+      description:
+        "Learn databases, SQL, tables, queries and database management concepts.",
+    },
+  };
+
+  const course = courses[id];
+
+  if (!course) {
+    return (
+      <div className="page">
+        <h1>Course Not Found</h1>
+
+        <Link to="/courses" className="button">
+          Back to Courses
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page">
+      <h1>{course.name}</h1>
+
+      <p>
+        <b>Course ID:</b> {id}
+      </p>
+
+      <p>
+        <b>Description:</b> {course.description}
+      </p>
+
+      <Link to="/courses" className="button">
+        Back to Courses
+      </Link>
+    </div>
+  );
+};
+
+// ===============================
+// About Page
+// ===============================
+
+const About = () => {
+  return (
+    <div className="page">
+      <h1>About</h1>
+
+      <p>
+        This is a Student Course Management Application developed
+        using React.
+      </p>
+
+      <p>The application demonstrates:</p>
+
+      <ul>
+        <li>React Router</li>
+        <li>Dynamic Routing</li>
+        <li>Context API</li>
+        <li>Functional Components</li>
+        <li>JSX</li>
+      </ul>
+    </div>
+  );
+};
+
+// ===============================
+// Main App
+// ===============================
+
+const App = () => {
+  return (
+    <StudentProvider>
+      <BrowserRouter>
+        <Navbar />
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+
+          <Route path="/courses" element={<Courses />} />
+
+          <Route path="/course/:id" element={<CourseDetails />} />
+
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </BrowserRouter>
+    </StudentProvider>
+  );
+};
+
+export default App;
